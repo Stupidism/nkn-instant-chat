@@ -1,69 +1,67 @@
 import React from 'react';
-import ChatRoom from 'components/ChatRoom/ChatRoom';
+import _ from 'lodash';
+import qs from 'qs';
 
 import '../App.less';
 
 class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      username: '',
-      address: '',
-    };
+  state = {
+    username: '',
+    address: '',
+  };
 
-    // Bind 'this' to event handlers. React ES6 does not do this by default
-    this.usernameChangeHandler = this.usernameChangeHandler.bind(this);
-    this.addressChangeHandler = this.addressChangeHandler.bind(this);
-    this.usernameSubmitHandler = this.usernameSubmitHandler.bind(this);
+  componentWillMount() {
+    const { location } = this.props;
+    const query = qs.parse(location.search, {
+      ignoreQueryPrefix: true,
+    });
+
+    this.setState(_.pick(query, ['username', 'address']));
   }
 
-  usernameChangeHandler(event) {
+  usernameChangeHandler = event => {
     this.setState({ username: event.target.value });
-  }
+  };
 
-  addressChangeHandler(event) {
+  addressChangeHandler = event => {
     this.setState({ address: event.target.value });
-  }
+  };
 
-  usernameSubmitHandler(event) {
+  handleSubmit = event => {
     event.preventDefault();
-    this.setState({ submitted: true, username: this.state.username });
-  }
+    const { history } = this.props;
+
+    history.push(
+      `/chat-room?username=${this.state.username}&address=${
+        this.state.address
+      }`,
+    );
+  };
 
   render() {
-    if (this.state.submitted) {
-      // Form was submitted, now show the main App
-      return (
-        <ChatRoom
-          username={this.state.username}
-          chatRoomAddress={this.state.address}
-        />
-      );
-    }
-
-    // Initial page load, show a simple login form
     return (
-      <form
-        onSubmit={this.usernameSubmitHandler}
-        className="username-container"
-      >
+      <form onSubmit={this.handleSubmit} className="username-container">
         <h1>Nkn Instant Chat</h1>
         <div>
           <input
             type="text"
+            value={this.state.username}
             onChange={this.usernameChangeHandler}
             placeholder="Enter a username..."
             required
           />
           <input
             type="text"
+            value={this.state.address}
             onChange={this.addressChangeHandler}
             placeholder="Enter an address or leave it blank..."
           />
         </div>
         <input
           type="submit"
-          value={this.state.address ? 'Join a Chat Room' : 'Create a Chat Room'}
+          value={
+            this.state.address ? 'Join the Chat Room' : 'Create a Chat Room'
+          }
         />
       </form>
     );

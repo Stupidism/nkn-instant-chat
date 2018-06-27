@@ -8,7 +8,7 @@ class Message extends React.Component {
     return (
       <div className={`hello-message ${fromMe}`}>
         {fromMe
-          ? 'You joined the chat room!'
+          ? `You joined ${this.props.ownerName}'s chat room!`
           : `${this.props.username} joined the chat room!`}
       </div>
     );
@@ -18,6 +18,7 @@ class Message extends React.Component {
 Message.defaultProps = {
   message: '',
   username: '',
+  ownerName: '',
   fromMe: false,
 };
 

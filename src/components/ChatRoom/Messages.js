@@ -2,6 +2,7 @@ import React from 'react';
 
 import Message from './Message';
 import HelloMessage from './HelloMessage';
+import CreationMessage from './CreationMessage';
 
 class Messages extends React.Component {
   componentDidUpdate() {
@@ -13,24 +14,20 @@ class Messages extends React.Component {
   render() {
     // Loop through all the messages in the state and create a Message component
     const messages = this.props.messages.map((message, i) => {
-      if (message.type === 'hello') {
-        return (
-          <HelloMessage
-            key={i}
-            username={message.username}
-            fromMe={message.fromMe}
-          />
-        );
+      switch (message.type) {
+        case 'let-there-be-a-chat-room': {
+          return <CreationMessage key={i} />;
+        }
+        case 'hello': {
+          return <HelloMessage key={i} {...message} />;
+        }
+        case 'chat': {
+          return <Message key={i} {...message} />;
+        }
+        default: {
+          return null;
+        }
       }
-
-      return (
-        <Message
-          key={i}
-          username={message.username}
-          message={message.message}
-          fromMe={message.fromMe}
-        />
-      );
     });
 
     return (

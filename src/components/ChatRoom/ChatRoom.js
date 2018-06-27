@@ -1,6 +1,7 @@
 import React from 'react';
-import nkn from 'nkn-client';
 import { FacebookShareButton, FacebookIcon } from 'react-share';
+
+import nkn from 'vendor/nkn';
 
 import Messages from './Messages';
 import ChatInput from './ChatInput';

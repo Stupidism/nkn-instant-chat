@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import { Route, Switch, Redirect } from 'react-router-dom';
-
-import Header from 'containers/Header';
+import { Route, Switch } from 'react-router-dom';
 
 import HomePage from './HomePage';
 import NotFoundPage from './NotFoundPage';
@@ -12,10 +10,8 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <Header />
         <Switch>
-          <Redirect exact from="/" to="/homepage" />
-          <Route path="/homepage" component={HomePage} />
+          <Route path="/" component={HomePage} />
           <Route component={NotFoundPage} />
         </Switch>
       </div>

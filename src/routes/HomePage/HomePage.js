@@ -1,76 +1,74 @@
 import React from 'react';
-import { withHandlers, compose, withProps } from 'recompose';
-import { Button, Divider } from 'antd';
-import { Switch, Route, Redirect } from 'react-router-dom';
+import ChatRoom from 'components/ChatRoom/ChatRoom';
 
-import ExternalLink from 'modules/ExternalLink';
-import Dependencies from 'components/Dependencies';
-import DevDependencies from 'components/DevDependencies';
+import '../App.less';
 
-import './HomePage.less';
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      username: '',
+      address: '',
+    };
 
-const links = {
-  createReactApp: (
-    <ExternalLink to="https://github.com/facebook/create-react-app">
-      create-react-app
-    </ExternalLink>
-  ),
-};
+    // Bind 'this' to event handlers. React ES6 does not do this by default
+    this.usernameChangeHandler = this.usernameChangeHandler.bind(this);
+    this.addressChangeHandler = this.addressChangeHandler.bind(this);
+    this.usernameSubmitHandler = this.usernameSubmitHandler.bind(this);
+  }
 
-export const HomePageRenderer = ({
-  match,
-  dependenciesButtonType,
-  devDependenciesButtonType,
-  goToDependencies,
-  goToDevDependencies,
-  dependenciesUrl,
-  devDependenciesUrl,
-}) => (
-  <div className="HomePage">
-    <p>
-      To get started, edit <code>src/routes/App.js</code> and save to reload.
-    </p>
-    <p>
-      This repo is created over {links.createReactApp}. Extra features are
-      listed below:
-    </p>
-    <Button.Group>
-      <Button type={dependenciesButtonType} onClick={goToDependencies}>
-        Dependencies
-      </Button>
-      <Button type={devDependenciesButtonType} onClick={goToDevDependencies}>
-        DevDependencies
-      </Button>
-    </Button.Group>
-    <Divider />
-    <Switch>
-      <Redirect exact from={match.url} to={dependenciesUrl} />
-      <Route path={dependenciesUrl} component={Dependencies} />
-      <Route path={devDependenciesUrl} component={DevDependencies} />
-    </Switch>
-  </div>
-);
+  usernameChangeHandler(event) {
+    this.setState({ username: event.target.value });
+  }
 
-export const goToDependencies = ({ history, dependenciesUrl }) => () =>
-  history.push(dependenciesUrl);
-export const goToDevDependencies = ({ history, devDependenciesUrl }) => () =>
-  history.push(devDependenciesUrl);
+  addressChangeHandler(event) {
+    this.setState({ address: event.target.value });
+  }
 
-const propsMapper = ({ match, location }) => ({
-  dependenciesButtonType: location.pathname.endsWith('/dependencies')
-    ? 'primary'
-    : 'default',
-  devDependenciesButtonType: location.pathname.endsWith('/dev-dependencies')
-    ? 'primary'
-    : 'default',
-  dependenciesUrl: `${match.url}/dependencies`,
-  devDependenciesUrl: `${match.url}/dev-dependencies`,
-});
+  usernameSubmitHandler(event) {
+    event.preventDefault();
+    this.setState({ submitted: true, username: this.state.username });
+  }
 
-export default compose(
-  withProps(propsMapper),
-  withHandlers({
-    goToDependencies,
-    goToDevDependencies,
-  }),
-)(HomePageRenderer);
+  render() {
+    if (this.state.submitted) {
+      // Form was submitted, now show the main App
+      return (
+        <ChatRoom
+          username={this.state.username}
+          chatRoomAddress={this.state.address}
+        />
+      );
+    }
+
+    // Initial page load, show a simple login form
+    return (
+      <form
+        onSubmit={this.usernameSubmitHandler}
+        className="username-container"
+      >
+        <h1>Nkn Instant Chat</h1>
+        <div>
+          <input
+            type="text"
+            onChange={this.usernameChangeHandler}
+            placeholder="Enter a username..."
+            required
+          />
+          <input
+            type="text"
+            onChange={this.addressChangeHandler}
+            placeholder="Enter an address or leave it blank..."
+          />
+        </div>
+        <input
+          type="submit"
+          value={this.state.address ? 'Join a Chat Room' : 'Create a Chat Room'}
+        />
+      </form>
+    );
+  }
+}
+App.defaultProps = {};
+
+export default App;

@@ -172,12 +172,6 @@ class ChatRoom extends React.Component {
         <Header className="ChatRoomHeader">
           {this.state.ownerName}'s Chat Room
           <div className="ShareButtons">
-            <Button
-              style={{ marginRight: 10 }}
-              shape="circle"
-              icon="qrcode"
-              onClick={() => this.setState({ qrcodeModalOpen: true })}
-            />
             <FacebookShareButton
               url={window.location.href.split('?')[0]}
               quote="Join me"
@@ -185,6 +179,12 @@ class ChatRoom extends React.Component {
             >
               <FacebookIcon size={32} round />
             </FacebookShareButton>
+            <Button
+              style={{ marginRight: 10 }}
+              shape="circle"
+              icon="qrcode"
+              onClick={() => this.setState({ qrcodeModalOpen: true })}
+            />
             <Dropdown
               overlay={
                 <Menu>
@@ -200,7 +200,11 @@ class ChatRoom extends React.Component {
               }
               trigger={['click']}
             >
-              <Button style={{ marginRight: 10 }} shape="circle" icon="down" />
+              <Button
+                style={{ marginRight: 10 }}
+                shape="circle"
+                icon="ellipsis"
+              />
             </Dropdown>
           </div>
         </Header>

@@ -1,2 +1,2 @@
 webpackJsonp([2],{139:function(e,t,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var o=n(0),a=n.n(o),u=n(21),r=function(){return a.a.createElement("h1",null,"Page Not found. Go ",a.a.createElement(u.b,{to:"/"},"Home"))};t.default=r}});
-//# sourceMappingURL=routes.NotFoundPage.07af058a.chunk.js.map
+//# sourceMappingURL=routes.NotFoundPage.d82db761.chunk.js.map

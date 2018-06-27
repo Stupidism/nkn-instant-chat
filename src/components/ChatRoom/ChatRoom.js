@@ -1,4 +1,5 @@
 import React from 'react';
+import _ from 'lodash';
 import { withRouter } from 'react-router-dom';
 import { FacebookShareButton, FacebookIcon } from 'react-share';
 
@@ -49,7 +50,6 @@ class ChatRoom extends React.Component {
 
         this.setState({
           chatRoomAddress: this.client.addr,
-          isOwner: true,
           slugAddress,
         });
 
@@ -62,6 +62,9 @@ class ChatRoom extends React.Component {
       } else {
         this.sendHelloMessage();
       }
+      this.setState({
+        isOwner: this.state.chatRoomAddress === this.client.addr,
+      });
 
       this.saveUsernameForAddress();
     });
@@ -71,38 +74,46 @@ class ChatRoom extends React.Component {
     });
   }
 
+  publishMessage = message => {
+    _.keys(this.chatters).forEach(chatterAddress => {
+      console.log(chatterAddress);
+
+      if (chatterAddress === message.from) return;
+
+      this.client.send(
+        chatterAddress,
+        JSON.stringify({
+          ...message,
+          username: this.props.username,
+        }),
+      );
+    });
+  };
+
   saveUsernameForAddress = () => {
     localStorage.setItem(this.state.slugAddress, this.props.username);
   };
 
-  handleHelloMessage = (from, username) => {
-    this.chatters[from] = { username };
-    this.addMessage({
-      from,
-      username,
-      type: 'hello',
-    });
-  };
+  handleMessageReceived = (from, message) => {
+    console.log('handleMessageReceived', from, message);
 
-  handleMessageReceived = (from, { type, username }) => {
-    if (from === this.state.chatRoomAddress) {
+    if (from === this.client.addr) {
       return;
     }
 
-    switch (type) {
-      case 'hello': {
-        this.handleHelloMessage(from, username);
-        break;
-      }
-      case 'chat': {
-        break;
-      }
-      case 'goodbye': {
-        break;
-      }
-      default: {
-        console.warn('Unknown Message Type', type);
-      }
+    if (message.type === 'hello') {
+      this.chatters[from] = message.username;
+    }
+
+    const messageWithFrom = {
+      from,
+      ...message,
+    };
+
+    this.addMessage(messageWithFrom);
+
+    if (this.state.isOwner) {
+      this.publishMessage(messageWithFrom);
     }
   };
 
@@ -111,13 +122,9 @@ class ChatRoom extends React.Component {
       this.state.chatRoomAddress,
       JSON.stringify({
         ...message,
+        username: this.props.username,
       }),
     );
-
-    this.addMessage({
-      ...message,
-      fromMe: true,
-    });
   };
 
   sendHelloMessage = () => {
@@ -128,19 +135,30 @@ class ChatRoom extends React.Component {
     };
 
     this.sendMessage(message);
+
+    this.addMessage({
+      ...message,
+      fromMe: true,
+    });
   };
 
-  handleSendChatMessage(content) {
+  handleSendChatMessage = content => {
     const message = {
       type: 'chat',
       content,
     };
 
-    // Emit the message to the server
+    if (this.state.isOwner) {
+      this.publishMessage(message);
+    } else {
+      this.sendMessage(message);
+    }
 
-    // this.socket.emit('client:message', messageObject);
-    this.sendMessage(message);
-  }
+    this.addMessage({
+      ...message,
+      fromMe: true,
+    });
+  };
 
   addMessage(message) {
     this.setState({ messages: [...this.state.messages, message] });

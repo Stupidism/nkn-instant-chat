@@ -13,13 +13,25 @@ class App extends React.Component {
 
   componentWillMount() {
     const { location, history, match } = this.props;
-    const { username } = qs.parse(location.search, {
+    const query = qs.parse(location.search, {
       ignoreQueryPrefix: true,
     });
     const address = match.params.address;
 
-    if (!username || address.length < 67) {
-      history.push('/');
+    const username = query.username || localStorage.getItem(address);
+
+    console.log(username, address, !username);
+
+    // Valid combinnation
+    // 1. username=foo, address=new
+    // 1. username=foo, address=real-address
+    if (!username || !address) {
+      if (username) {
+        history.push(`/?username=${username}`);
+      }
+      if (address) {
+        history.push(`/?address=${address}`);
+      }
       return;
     }
 
@@ -31,10 +43,7 @@ class App extends React.Component {
 
   render() {
     return (
-      <ChatRoom
-        username={this.state.username}
-        chatRoomAddress={this.state.address}
-      />
+      <ChatRoom username={this.state.username} address={this.state.address} />
     );
   }
 }

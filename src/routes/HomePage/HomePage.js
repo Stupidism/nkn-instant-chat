@@ -32,8 +32,8 @@ class App extends React.Component {
     const { history } = this.props;
 
     history.push(
-      `/chat-room?username=${this.state.username}&address=${
-        this.state.address
+      `/chat-room/${this.state.address || 'new'}?username=${
+        this.state.username
       }`,
     );
   };

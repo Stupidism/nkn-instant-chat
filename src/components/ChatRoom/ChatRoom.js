@@ -1,4 +1,5 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 import { FacebookShareButton, FacebookIcon } from 'react-share';
 
 import nkn from 'vendor/nkn';
@@ -17,9 +18,10 @@ class ChatRoom extends React.Component {
 
   state = {
     messages: [],
-    chatRoomAddress: `nkn-instant-chat-${this.props.chatRoomAddress}`,
+    chatRoomAddress: `nkn-instant-chat-${this.props.address}`,
     isOwner: false,
-    ownerName: parseOwnerNameFromAddress(this.props.chatRoomAddress),
+    ownerName: parseOwnerNameFromAddress(this.props.address),
+    slugAddress: this.props.address,
   };
 
   componentWillMount() {
@@ -38,25 +40,40 @@ class ChatRoom extends React.Component {
         this.client.key.privateKey,
       );
 
-      if (!this.props.chatRoomAddress) {
+      if (this.props.address === 'new') {
+        const { history, location } = this.props;
+
+        console.log(history, location, this.client);
+
+        const slugAddress = this.client.addr.substr(17);
+
         this.setState({
           chatRoomAddress: this.client.addr,
           isOwner: true,
+          slugAddress,
         });
 
         this.addMessage({
           type: 'let-there-be-a-chat-room',
           fromMe: true,
         });
+
+        history.replace(`/chat-room/${slugAddress}`);
       } else {
         this.sendHelloMessage();
       }
+
+      this.saveUsernameForAddress();
     });
 
     this.client.on('message', (src, payload) => {
       this.handleMessageReceived(src, JSON.parse(payload));
     });
   }
+
+  saveUsernameForAddress = () => {
+    localStorage.setItem(this.state.slugAddress, this.props.username);
+  };
 
   handleHelloMessage = (from, username) => {
     this.chatters[from] = { username };
@@ -68,6 +85,10 @@ class ChatRoom extends React.Component {
   };
 
   handleMessageReceived = (from, { type, username }) => {
+    if (from === this.state.chatRoomAddress) {
+      return;
+    }
+
     switch (type) {
       case 'hello': {
         this.handleHelloMessage(from, username);
@@ -148,4 +169,4 @@ ChatRoom.defaultProps = {
   username: 'Anonymous',
 };
 
-export default ChatRoom;
+export default withRouter(ChatRoom);

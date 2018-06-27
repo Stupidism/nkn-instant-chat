@@ -20,8 +20,6 @@ class App extends React.Component {
 
     const username = query.username || localStorage.getItem(address);
 
-    console.log(username, address, !username);
-
     // Valid combinnation
     // 1. username=foo, address=new
     // 1. username=foo, address=real-address

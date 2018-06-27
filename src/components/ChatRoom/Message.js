@@ -5,8 +5,6 @@ class Message extends React.Component {
     // Was the message sent by the current user. If so, add a css class
     const fromMe = this.props.fromMe ? 'from-me' : '';
 
-    console.log(fromMe, this.props);
-
     return (
       <div className={`message ${fromMe}`}>
         <div className="username">{this.props.username}</div>

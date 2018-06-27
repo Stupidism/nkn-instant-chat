@@ -42,9 +42,7 @@ class ChatRoom extends React.Component {
       );
 
       if (this.props.address === 'new') {
-        const { history, location } = this.props;
-
-        console.log(history, location, this.client);
+        const { history } = this.props;
 
         const slugAddress = this.client.addr.substr(17);
 
@@ -76,8 +74,6 @@ class ChatRoom extends React.Component {
 
   publishMessage = message => {
     _.keys(this.chatters).forEach(chatterAddress => {
-      console.log(chatterAddress);
-
       if (chatterAddress === message.from) return;
 
       this.client.send(
@@ -95,8 +91,6 @@ class ChatRoom extends React.Component {
   };
 
   handleMessageReceived = (from, message) => {
-    console.log('handleMessageReceived', from, message);
-
     if (from === this.client.addr) {
       return;
     }

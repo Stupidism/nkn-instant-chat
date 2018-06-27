@@ -1,8 +1,8 @@
 import React from 'react';
 import _ from 'lodash';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import { FacebookShareButton, FacebookIcon } from 'react-share';
-import { Button, Modal, Layout } from 'antd';
+import { Button, Modal, Layout, Dropdown, Menu } from 'antd';
 import Qrcode from 'qrcode.react';
 
 import nkn from 'vendor/nkn';
@@ -54,6 +54,7 @@ class ChatRoom extends React.Component {
         this.setState({
           chatRoomAddress: this.client.addr,
           slugAddress,
+          ownerName: parseOwnerNameFromAddress(slugAddress),
         });
 
         this.addMessage({
@@ -164,10 +165,12 @@ class ChatRoom extends React.Component {
   }
 
   render() {
+    console.log(this.props.location);
+
     return (
       <div className="container">
         <Header className="ChatRoomHeader">
-          Nkn Chat App
+          {this.state.ownerName}'s Chat Room
           <div className="ShareButtons">
             <Button
               style={{ marginRight: 10 }}
@@ -178,9 +181,27 @@ class ChatRoom extends React.Component {
             <FacebookShareButton
               url={window.location.href.split('?')[0]}
               quote="Join me"
+              style={{ marginRight: 10 }}
             >
               <FacebookIcon size={32} round />
             </FacebookShareButton>
+            <Dropdown
+              overlay={
+                <Menu>
+                  <Menu.Item key="0">
+                    <Link to={`/?username=${this.props.username}`}>
+                      Create My Own Chat Room
+                    </Link>
+                  </Menu.Item>
+                  <Menu.Item key="1">
+                    <Link to="/">Exit</Link>
+                  </Menu.Item>
+                </Menu>
+              }
+              trigger={['click']}
+            >
+              <Button style={{ marginRight: 10 }} shape="circle" icon="down" />
+            </Dropdown>
           </div>
         </Header>
         <Messages messages={this.state.messages} />

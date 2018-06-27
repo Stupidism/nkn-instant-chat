@@ -4,6 +4,7 @@ import { withRouter, Link } from 'react-router-dom';
 import { FacebookShareButton, FacebookIcon } from 'react-share';
 import { Button, Modal, Layout, Dropdown, Menu } from 'antd';
 import Qrcode from 'qrcode.react';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import nkn from 'vendor/nkn';
 
@@ -165,13 +166,15 @@ class ChatRoom extends React.Component {
   }
 
   render() {
+    const shareLink = window.location.href.split('?')[0];
+
     return (
       <div className="container">
         <Header className="ChatRoomHeader">
           {this.state.ownerName}'s Chat Room
           <div className="ShareButtons">
             <FacebookShareButton
-              url={window.location.href.split('?')[0]}
+              url={shareLink}
               quote="Join me"
               style={{ marginRight: 10 }}
             >
@@ -215,9 +218,14 @@ class ChatRoom extends React.Component {
           wrapClassName="vertical-center-modal"
           visible={this.state.qrcodeModalOpen}
           onCancel={() => this.setState({ qrcodeModalOpen: false })}
-          footer={null}
+          footer={[
+            <CopyToClipboard text={shareLink}>
+              <Button>Copy to clipboard</Button>
+            </CopyToClipboard>,
+          ]}
         >
-          <Qrcode value={window.location.href.split('?')[0]} size={256} />
+          <Qrcode value={shareLink} size={256} />
+          <br />
         </Modal>
       </div>
     );

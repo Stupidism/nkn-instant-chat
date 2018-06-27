@@ -2,7 +2,7 @@ import React from 'react';
 import _ from 'lodash';
 import { withRouter } from 'react-router-dom';
 import { FacebookShareButton, FacebookIcon } from 'react-share';
-import { Button, Modal } from 'antd';
+import { Button, Modal, Layout } from 'antd';
 import Qrcode from 'qrcode.react';
 
 import nkn from 'vendor/nkn';
@@ -15,6 +15,8 @@ import './ChatRoom.less';
 const parseOwnerNameFromAddress = address => {
   return address.substr(0, address.length - 67);
 };
+
+const { Header, Footer } = Layout;
 
 class ChatRoom extends React.Component {
   chatters = {};
@@ -164,24 +166,27 @@ class ChatRoom extends React.Component {
   render() {
     return (
       <div className="container">
-        <h3 className="ChatRoomHeader">
+        <Header className="ChatRoomHeader">
           Nkn Chat App
-          <FacebookShareButton
-            style={{ float: 'right' }}
-            url={window.location.href.split('?')[0]}
-            quote="Join me"
-          >
-            <FacebookIcon size={32} round />
-          </FacebookShareButton>
-          <Button
-            style={{ float: 'right', marginRight: 10 }}
-            shape="circle"
-            icon="qrcode"
-            onClick={() => this.setState({ qrcodeModalOpen: true })}
-          />
-        </h3>
+          <div className="ShareButtons">
+            <Button
+              style={{ marginRight: 10 }}
+              shape="circle"
+              icon="qrcode"
+              onClick={() => this.setState({ qrcodeModalOpen: true })}
+            />
+            <FacebookShareButton
+              url={window.location.href.split('?')[0]}
+              quote="Join me"
+            >
+              <FacebookIcon size={32} round />
+            </FacebookShareButton>
+          </div>
+        </Header>
         <Messages messages={this.state.messages} />
-        <ChatInput onSend={this.handleSendChatMessage} />
+        <Footer className="InputFooter">
+          <ChatInput onSend={this.handleSendChatMessage} />
+        </Footer>
         <Modal
           title="Scan to Join"
           wrapClassName="vertical-center-modal"

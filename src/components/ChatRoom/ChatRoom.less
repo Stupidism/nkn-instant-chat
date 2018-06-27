@@ -13,14 +13,10 @@
 .chat-input {
   position: relative;
   overflow: hidden;
-  padding: 0 40px;
-  flex-shrink: 0;
 }
 
 .chat-input input[type='text'] {
   width: 100%;
-  margin-left: -20px;
-  margin-right: -20px;
 }
 
 .message {
@@ -66,13 +62,14 @@
   margin-bottom: 5px;
 }
 
-h3.ChatRoomHeader {
+.ChatRoomHeader {
   text-align: center;
   padding: 20px;
   margin: 0;
   border-bottom: 1px solid #ddd;
   background-color: #eee;
-  line-height: 32px;
+  line-height: 24px;
+  position: relative;
 }
 
 .vertical-center-modal {
@@ -95,4 +92,18 @@ h3.ChatRoomHeader {
     padding-bottom: 0;
     width: auto !important;
   }
+}
+
+.ShareButtons {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  right: 20px;
+  top: 0;
+  bottom: 0;
+}
+
+.InputFooter {
+  background: white;
+  padding: 10px 20px;
 }

@@ -2,6 +2,8 @@ import React from 'react';
 import _ from 'lodash';
 import { withRouter } from 'react-router-dom';
 import { FacebookShareButton, FacebookIcon } from 'react-share';
+import { Button, Modal } from 'antd';
+import Qrcode from 'qrcode.react';
 
 import nkn from 'vendor/nkn';
 
@@ -23,6 +25,7 @@ class ChatRoom extends React.Component {
     isOwner: false,
     ownerName: parseOwnerNameFromAddress(this.props.address),
     slugAddress: this.props.address,
+    qrcodeModalOpen: false,
   };
 
   componentWillMount() {
@@ -170,9 +173,24 @@ class ChatRoom extends React.Component {
           >
             <FacebookIcon size={32} round />
           </FacebookShareButton>
+          <Button
+            style={{ float: 'right', marginRight: 10 }}
+            shape="circle"
+            icon="qrcode"
+            onClick={() => this.setState({ qrcodeModalOpen: true })}
+          />
         </h3>
         <Messages messages={this.state.messages} />
         <ChatInput onSend={this.handleSendChatMessage} />
+        <Modal
+          title="Scan to Join"
+          wrapClassName="vertical-center-modal"
+          visible={this.state.qrcodeModalOpen}
+          onCancel={() => this.setState({ qrcodeModalOpen: false })}
+          footer={null}
+        >
+          <Qrcode value={window.location.href.split('?')[0]} size={256} />
+        </Modal>
       </div>
     );
   }

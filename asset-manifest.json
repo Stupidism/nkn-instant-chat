@@ -1,0 +1,12 @@
+{
+  "main.css": "static/css/main.46c8c69e.css",
+  "main.css.map": "static/css/main.46c8c69e.css.map",
+  "main.js": "static/js/main.d0fdd42f.js",
+  "main.js.map": "static/js/main.d0fdd42f.js.map",
+  "routes.ChatRoomPage.js": "static/js/routes.ChatRoomPage.671e39a8.chunk.js",
+  "routes.ChatRoomPage.js.map": "static/js/routes.ChatRoomPage.671e39a8.chunk.js.map",
+  "routes.HomePage.js": "static/js/routes.HomePage.0ea050e4.chunk.js",
+  "routes.HomePage.js.map": "static/js/routes.HomePage.0ea050e4.chunk.js.map",
+  "routes.NotFoundPage.js": "static/js/routes.NotFoundPage.07af058a.chunk.js",
+  "routes.NotFoundPage.js.map": "static/js/routes.NotFoundPage.07af058a.chunk.js.map"
+}

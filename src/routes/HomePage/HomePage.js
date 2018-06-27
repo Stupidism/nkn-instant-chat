@@ -41,7 +41,7 @@ class App extends React.Component {
   render() {
     return (
       <form onSubmit={this.handleSubmit} className="username-container">
-        <h1>Nkn Instant Chat</h1>
+        <h1>NKN Instant Chat</h1>
         <div>
           <input
             type="text"
@@ -49,12 +49,6 @@ class App extends React.Component {
             onChange={this.usernameChangeHandler}
             placeholder="Enter a username..."
             required
-          />
-          <input
-            type="text"
-            value={this.state.address}
-            onChange={this.addressChangeHandler}
-            placeholder="Enter an address or leave it blank..."
           />
         </div>
         <input
